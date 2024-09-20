@@ -19,11 +19,19 @@ public class Track
         get { return _Patterns.ToImmutableList(); }
     }
 
-    public Pattern AddPattern()
+    public Pattern AddPattern(byte? index)
     {
-        Pattern pattern = new Pattern(PatternSize);
-        _Patterns.Add(pattern);
-        return pattern;
+        byte id = index ?? Convert.ToByte(_Patterns.Count);
+        if (_Patterns.Find(p => p.Id == id) == null)
+        {
+            Pattern pattern = new Pattern(id, PatternSize);
+            _Patterns.Add(pattern);
+            return pattern;
+        }
+        else
+        {
+            throw new Exception("Pattern does not exist");
+        }
     }
 
     public ImmutableList<Pattern> GetPatternSequence()

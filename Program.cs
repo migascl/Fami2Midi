@@ -90,7 +90,7 @@ internal class Program
                 JsonElement patternsEl = trackEl.GetProperty("patterns");
                 foreach (JsonElement patternEl in patternsEl.EnumerateArray())
                 {
-                    Pattern pattern = track.AddPattern();
+                    Pattern pattern = track.AddPattern(patternEl.GetProperty("index").GetByte());
 
                     // Notes
                     JsonElement eventsEl = patternEl.GetProperty("notes");

@@ -5,9 +5,11 @@ namespace FamiTracker;
 public class Pattern
 {
     private Event[] _Events;
+    public byte Id;
 
-    public Pattern(byte patternSize)
+    public Pattern(byte Id, byte patternSize)
     {
+        this.Id = Id;
         _Events = new Event[patternSize];
     }
 
