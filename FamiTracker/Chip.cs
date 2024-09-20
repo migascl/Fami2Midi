@@ -2,10 +2,11 @@
 
 public enum Chip
 {
-    VRC6,
-    MMC5,
-    N163,
-    FDS,
-    VRC7,
-    S5B
+    _2A03,
+    _VRC6,
+    _MMC5,
+    _N163,
+    _FDS,
+    _VRC7,
+    _S5B
 }
