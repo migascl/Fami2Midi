@@ -19,7 +19,12 @@ public class Track
         get { return _Patterns.ToImmutableList(); }
     }
 
-    public void AddPattern(Event[] pattern) => _Patterns.Add(new Pattern(PatternSize));
+    public Pattern AddPattern()
+    {
+        Pattern pattern = new Pattern(PatternSize);
+        _Patterns.Add(pattern);
+        return pattern;
+    }
 
     public ImmutableList<Pattern> GetPatternSequence()
     {
