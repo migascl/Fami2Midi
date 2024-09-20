@@ -5,6 +5,8 @@ VisualStudioVersion = 17.11.35303.130
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fami2Midi", "Fami2Midi.csproj", "{06A2F248-EC22-4858-B591-90F11053D959}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamiTracker", "FamiTracker\FamiTracker.csproj", "{3BC56EEA-81A0-49A5-8C21-8C7E8EB51B62}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{06A2F248-EC22-4858-B591-90F11053D959}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06A2F248-EC22-4858-B591-90F11053D959}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06A2F248-EC22-4858-B591-90F11053D959}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BC56EEA-81A0-49A5-8C21-8C7E8EB51B62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BC56EEA-81A0-49A5-8C21-8C7E8EB51B62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BC56EEA-81A0-49A5-8C21-8C7E8EB51B62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BC56EEA-81A0-49A5-8C21-8C7E8EB51B62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
