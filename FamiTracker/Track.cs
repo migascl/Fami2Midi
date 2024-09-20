@@ -5,12 +5,12 @@ namespace FamiTracker;
 public class Track
 {
     private List<Pattern> _Patterns = new List<Pattern>();
+    public byte[] Framelist;
     private byte PatternSize;
-    public byte[] Playlist;
 
-    public Track(byte playListSize, byte patternSize)
+    public Track(byte frameListSize, byte patternSize)
     {
-        Playlist = new byte[playListSize];
+        Framelist = new byte[frameListSize];
         PatternSize = patternSize;
     }
 
@@ -24,7 +24,7 @@ public class Track
     public ImmutableList<Pattern> GetPatternSequence()
     {
         List<Pattern> result = new List<Pattern>();
-        foreach (byte index in Playlist)
+        foreach (byte index in Framelist)
         {
             result.Add(Patterns.ElementAt(index));
         }
