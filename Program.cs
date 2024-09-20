@@ -98,7 +98,7 @@ internal class Program
                     {
                         JsonElement noteEl = eventEl.GetProperty("note");
 
-                        Event note = new Event();
+                        Event note = new Event { Id = eventEl.GetProperty("row").GetByte() };
                         if (Enum.TryParse(noteEl.GetProperty("kind").GetString(), true, out NoteType kind))
                             note.Kind = kind;
                         if (noteEl.TryGetProperty("volume", out JsonElement volume)) note.Volume = volume.GetByte();
