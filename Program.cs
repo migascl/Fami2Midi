@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Collections.Immutable;
 using FamiTracker;
 
 namespace Fami2Midi;
@@ -101,7 +102,7 @@ internal class Program
                         Event note = new Event { Id = eventEl.GetProperty("row").GetByte() };
                         if (Enum.TryParse(noteEl.GetProperty("kind").GetString(), true, out NoteType kind))
                             note.Kind = kind;
-                        if (noteEl.TryGetProperty("volume", out JsonElement volume)) note.Volume = volume.GetByte();
+                        if (noteEl.TryGetProperty("volume", out JsonElement volume)) note.Volume = (byte)((byte.MaxValue * volume.GetByte()) / 15);
                         if (noteEl.TryGetProperty("inst_index", out JsonElement instIndex))
                             note.Instrument = project.Instruments.ElementAt(instIndex.GetByte());
                         if (noteEl.TryGetProperty("value", out JsonElement noteValue)) note.Value = noteValue.GetByte();
