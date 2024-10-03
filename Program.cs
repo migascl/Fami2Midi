@@ -1,6 +1,11 @@
 ﻿using System.Text.Json;
 using System.Collections.Immutable;
 using FamiTracker;
+using Melanchall.DryWetMidi.Common;
+using Melanchall.DryWetMidi.Composing;
+using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Interaction;
+using Note = Melanchall.DryWetMidi.MusicTheory.Note;
 
 namespace Fami2Midi;
 
@@ -10,6 +15,9 @@ internal class Program
     {
         string jsonString = ReadFile(args[0]);
         Project project = ParseFile(jsonString);
+
+        MidiFile midiFile = SongToMidi(project, 0);
+        midiFile.Write(String.Format("{0} - {1} ({2}).mid", project.Metadata.Artist, project.Metadata.Title, 0), true);
 
         Console.WriteLine("Done.");
     }
@@ -94,7 +102,7 @@ internal class Program
                 JsonElement patternsEl = trackEl.GetProperty("patterns");
                 foreach (JsonElement patternEl in patternsEl.EnumerateArray())
                 {
-                    Pattern pattern = track.AddPattern(patternEl.GetProperty("index").GetByte());
+                    FamiTracker.Pattern pattern = track.AddPattern(patternEl.GetProperty("index").GetByte());
 
                     // Notes
                     JsonElement eventsEl = patternEl.GetProperty("notes");
@@ -134,5 +142,61 @@ internal class Program
         }
 
         return project;
+    }
+
+    private static MidiFile SongToMidi(Project project, byte songIndex)
+    {
+        MidiFile midiFile = new MidiFile();
+        Song song = project.Songs.ElementAt(songIndex);
+        TempoMap tempoMap = TempoMap.Create(Tempo.FromBeatsPerMinute(song.Tempo));
+        midiFile.ReplaceTempoMap(tempoMap);
+
+        for (int trackId = 0; trackId < song.Tracks.Count; trackId++)
+        {
+            PatternBuilder patternBuilder = new PatternBuilder();
+            patternBuilder.SetStep(MusicalTimeSpan.Sixteenth);
+            patternBuilder.SetNoteLength(MusicalTimeSpan.Sixteenth);
+
+            Track track = song.Tracks.ElementAt(trackId);
+            track.GetPatternSequence().ForEach((FamiTracker.Pattern pattern) =>
+            {
+                patternBuilder.MoveToTime((song.Rows * pattern.Id) * MusicalTimeSpan.Sixteenth);
+                patternBuilder.Anchor();
+                // For debugging
+                //patternBuilder.Marker(pattern.Id.ToString());
+
+                ImmutableList<Event> _notesList = pattern.Events.Where(e => e != null).ToImmutableList();
+                for (int i = 0; i < _notesList.Count; i++)
+                {
+                    Event currentEvent = _notesList.ElementAt(i);
+
+                    patternBuilder.MoveToLastAnchor();
+                    patternBuilder.StepForward(currentEvent.Id * MusicalTimeSpan.Sixteenth);
+
+                    // Get next row index
+                    Event? nextEvent = _notesList.ElementAtOrDefault(i + 1);
+                    int nextRow = nextEvent != null ? nextEvent.Id : song.Rows - 1;
+
+                    if (currentEvent.Kind == NoteType.Note)
+                    {
+                        Note note = Note.Get((SevenBitNumber)(currentEvent.Value ?? 0));
+                        patternBuilder.Note(note, (nextRow - currentEvent.Id) * MusicalTimeSpan.Sixteenth);
+                    }
+
+                    if (currentEvent.Volume != null)
+                    {
+                        SevenBitNumber volume = (SevenBitNumber)((byte)SevenBitNumber.MaxValue * currentEvent.Volume / byte.MaxValue);
+                        patternBuilder.ControlChange(ControlName.ChannelVolume.AsSevenBitNumber(), volume);
+                    }
+
+                    // TODO: Add effects support
+                }
+            });
+
+            TrackChunk trackChunk = patternBuilder.Build().ToTrackChunk(tempoMap, (FourBitNumber)trackId);
+            midiFile.Chunks.Add(trackChunk);
+        }
+
+        return midiFile;
     }
 }

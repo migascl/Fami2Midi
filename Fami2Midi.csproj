@@ -13,4 +13,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Melanchall.DryWetMidi" Version="7.2.1-prerelease1" />
+  </ItemGroup>
+
 </Project>
