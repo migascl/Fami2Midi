@@ -8,7 +8,10 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        string content = ReadFile(args[0]);
+        string jsonString = ReadFile(args[0]);
+        Project project = ParseFile(jsonString);
+
+        Console.WriteLine("Done.");
     }
 
     static string ReadFile(string path)
