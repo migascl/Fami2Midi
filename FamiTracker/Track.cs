@@ -39,7 +39,15 @@ public class Track
         List<Pattern> result = new List<Pattern>();
         foreach (byte index in Framelist)
         {
-            result.Add(Patterns.ElementAt(index));
+            Pattern? pattern = Patterns.ElementAtOrDefault(index);
+            if(pattern != null)
+            {
+                result.Add(Patterns.ElementAt(index));
+            } else
+            {
+                continue;
+            }
+            
         }
 
         return result.ToImmutableList();
